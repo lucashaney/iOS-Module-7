@@ -82,6 +82,7 @@ class SearchResult: Codable, CustomStringConvertible {
     }
 }
 
+// Sorts array in ascending order
 func < (lhs: SearchResult, rhs: SearchResult) -> Bool {
     return lhs.name.localizedStandardCompare(rhs.name) == .orderedAscending
 }
