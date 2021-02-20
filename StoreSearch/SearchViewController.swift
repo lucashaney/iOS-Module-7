@@ -12,6 +12,7 @@ class SearchViewController: UIViewController {
     // Properties
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
     
     // Variables
     var searchResults = [SearchResult]()
@@ -22,14 +23,6 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        searchBar.becomeFirstResponder()
-        searchBar.delegate = self
-        searchBar.barStyle = .default
-        searchBar.barTintColor = UIColor(red: 20/255, green: 160/255, blue: 160/255, alpha: 1)
-        searchBar.searchTextField.backgroundColor = .white
-        
-        tableView.contentInset = UIEdgeInsets(top: 54, left: 0, bottom: 0, right: 0)
-        
         var cellNib = UINib(nibName: TableView.CallIdentifiers.searchResultCell, bundle: nil)
         tableView.register(cellNib, forCellReuseIdentifier: TableView.CallIdentifiers.searchResultCell)
         
@@ -38,6 +31,22 @@ class SearchViewController: UIViewController {
         
         cellNib = UINib(nibName: TableView.CallIdentifiers.loadingCell, bundle: nil)
         tableView.register(cellNib, forCellReuseIdentifier: TableView.CallIdentifiers.loadingCell)
+        
+        searchBar.becomeFirstResponder()
+        searchBar.delegate = self
+        searchBar.barStyle = .default
+        searchBar.barTintColor = UIColor(red: 20/255, green: 160/255, blue: 160/255, alpha: 1)
+        searchBar.searchTextField.backgroundColor = .white
+        
+        tableView.contentInset = UIEdgeInsets(top: 98, left: 0, bottom: 0, right: 0)
+        let segmentColor = UIColor(red: 10/255, green: 80/255, blue: 80/255, alpha: 1)
+        let selectedTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        let normalTextAttributes = [NSAttributedString.Key.foregroundColor: segmentColor]
+        segmentedControl.selectedSegmentTintColor = segmentColor
+        
+        segmentedControl.setTitleTextAttributes(normalTextAttributes, for: .normal)
+        segmentedControl.setTitleTextAttributes(selectedTextAttributes, for: .selected)
+        segmentedControl.setTitleTextAttributes(selectedTextAttributes, for: .highlighted)
     }
     
     // Constant for cell reuse identifier
@@ -51,9 +60,17 @@ class SearchViewController: UIViewController {
     
     // MARK:- Helper Methods
     // Returns url from itunes search
-    func iTunesURL(searchText: String) -> URL {
+    func iTunesURL(searchText: String, category: Int) -> URL {
+        let kind: String
+        switch category {
+            case 1: kind = "musicTrack"
+            case 2: kind = "software"
+            case 3: kind = "ebook"
+            default: kind = ""
+        }
+        
         let encodedText = searchText.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
-        let urlString = String(format: "https://itunes.apple.com/search?term=%@&limit=200", encodedText)
+        let urlString = "https://itunes.apple.com/search?" + "term=\(encodedText)&limit=200&entity=\(kind)"
         let url = URL(string: urlString)
         return url!
     }
@@ -70,18 +87,29 @@ class SearchViewController: UIViewController {
         }
     }
     
+    // Shows alert for network error
     func showNetworkError() {
         let alert = UIAlertController(title: "Whoops...", message: "There was an error accessing the iTunes Store." + " Please try again.", preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .default, handler: nil)
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
+    
+    // Action for when a segment is changed
+    @IBAction func segmentChanged(_ sender: UISegmentedControl) {
+        performSearch()
+    }
+    
+    // Performs search when search is confirmed
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        performSearch()
+    }
 }
 
 // MARK:- Extensions
 // Gets text entered into the search bar
 extension SearchViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    func performSearch() {
         if !searchBar.text!.isEmpty {
             searchBar.resignFirstResponder()
             dataTask?.cancel()
@@ -92,7 +120,7 @@ extension SearchViewController: UISearchBarDelegate {
             hasSearched = true
             searchResults = []
             
-            let url = iTunesURL(searchText: searchBar.text!)
+            let url = iTunesURL(searchText: searchBar.text!, category: segmentedControl.selectedSegmentIndex)
             let session = URLSession.shared
             dataTask = session.dataTask(with: url, completionHandler: { data, response, error in
                 if let error = error as NSError?, error.code == -999 {
@@ -126,6 +154,7 @@ extension SearchViewController: UISearchBarDelegate {
     }
 }
 
+// MARK:- Table Views
 // Sets number of rows and cell data
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
