@@ -21,6 +21,7 @@ class DetailViewController: UIViewController {
     // Properties
     var searchResult: SearchResult!
     var downloadTask: URLSessionDownloadTask?
+    var dismissStyle = AnimationStyle.fade
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,9 +43,10 @@ class DetailViewController: UIViewController {
         view.backgroundColor = UIColor.clear
     }
     
-    // MARK:- Helper Methods
+    // MARK:- Actions
     // Function for close button
     @IBAction func close() {
+        dismissStyle = .slide
         dismiss(animated: true, completion: nil)
     }
     
@@ -55,6 +57,7 @@ class DetailViewController: UIViewController {
         }
     }
     
+    // MARK:- Helper Methods
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         modalPresentationStyle = .custom
@@ -98,6 +101,11 @@ class DetailViewController: UIViewController {
             downloadTask = artworkImageView.loadImage(url: largeURL)
         }
     }
+    
+    enum AnimationStyle {
+        case slide
+        case fade
+    }
 }
 
 // MARK:- Extensions
@@ -116,7 +124,12 @@ extension DetailViewController: UIViewControllerTransitioningDelegate {
     
     // Animation for exiting pop-up view
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return SlideOutAnimationController()
+        switch dismissStyle {
+        case .slide:
+            return SlideOutAnimationController()
+        case .fade:
+            return FadeOutAnimationController()
+        }
     }
 }
 
