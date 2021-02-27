@@ -106,6 +106,7 @@ class SearchViewController: UIViewController {
     }
     
     // MARK:- Navigation
+    // Prepares segue to detail view controller and transfers data
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Show Detail" {
             let detailViewController = segue.destination as! DetailViewController

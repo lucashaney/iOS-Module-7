@@ -41,10 +41,12 @@ class DetailViewController: UIViewController {
     }
     
     // MARK:- Helper Methods
+    // Function for close button
     @IBAction func close() {
         dismiss(animated: true, completion: nil)
     }
     
+    // Action for pprice button
     @IBAction func openInStore() {
         if let url = URL(string: searchResult.storeURL) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
@@ -62,6 +64,7 @@ class DetailViewController: UIViewController {
         downloadTask?.cancel()
     }
     
+    // Updates data to labels in pop-up view
     func updateUI() {
         nameLabel.text = searchResult.name
         
@@ -96,6 +99,7 @@ class DetailViewController: UIViewController {
 }
 
 // MARK:- Extensions
+// Adds presentation controller for pop-up view
 extension DetailViewController: UIViewControllerTransitioningDelegate {
     
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
@@ -104,6 +108,7 @@ extension DetailViewController: UIViewControllerTransitioningDelegate {
     }
 }
 
+// Gesture recognizer for click outside pop-up view
 extension DetailViewController: UIGestureRecognizerDelegate {
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
