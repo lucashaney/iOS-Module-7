@@ -38,6 +38,8 @@ class DetailViewController: UIViewController {
         if searchResult != nil {
             updateUI()
         }
+        
+        view.backgroundColor = UIColor.clear
     }
     
     // MARK:- Helper Methods
@@ -105,6 +107,16 @@ extension DetailViewController: UIViewControllerTransitioningDelegate {
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         
         return DimmingPresentationController(presentedViewController: presented, presenting: presenting)
+    }
+    
+    // Animation for pop-up view entrance
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return BounceAnimationController()
+    }
+    
+    // Animation for exiting pop-up view
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return SlideOutAnimationController()
     }
 }
 
