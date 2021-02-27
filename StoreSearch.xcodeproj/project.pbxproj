@@ -25,6 +25,7 @@
 		A0F1283425EADD0900E7A30F /* SlideOutAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F1283325EADD0900E7A30F /* SlideOutAnimationController.swift */; };
 		A0F1283725EAE27D00E7A30F /* LandscapeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F1283625EAE27D00E7A30F /* LandscapeViewController.swift */; };
 		A0F1283A25EAEC5700E7A30F /* FadeOutAnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F1283925EAEC5700E7A30F /* FadeOutAnimationController.swift */; };
+		A0F1283D25EB06F300E7A30F /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F1283C25EB06F300E7A30F /* Search.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		A0F1283325EADD0900E7A30F /* SlideOutAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideOutAnimationController.swift; sourceTree = "<group>"; };
 		A0F1283625EAE27D00E7A30F /* LandscapeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandscapeViewController.swift; sourceTree = "<group>"; };
 		A0F1283925EAEC5700E7A30F /* FadeOutAnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadeOutAnimationController.swift; sourceTree = "<group>"; };
+		A0F1283C25EB06F300E7A30F /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 				A0F1283325EADD0900E7A30F /* SlideOutAnimationController.swift */,
 				A0F1283625EAE27D00E7A30F /* LandscapeViewController.swift */,
 				A0F1283925EAEC5700E7A30F /* FadeOutAnimationController.swift */,
+				A0F1283C25EB06F300E7A30F /* Search.swift */,
 			);
 			path = StoreSearch;
 			sourceTree = "<group>";
@@ -188,6 +191,7 @@
 				A0F1282825E72BE400E7A30F /* DetailViewController.swift in Sources */,
 				A0F1283725EAE27D00E7A30F /* LandscapeViewController.swift in Sources */,
 				A0F1282E25EAC84400E7A30F /* GradientView.swift in Sources */,
+				A0F1283D25EB06F300E7A30F /* Search.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
