@@ -79,7 +79,7 @@ class DetailViewController: UIViewController {
             artistNameLabel.text = searchResult.artist
         }
         
-        kindLabel.text = searchResult.kind
+        kindLabel.text = searchResult.type
         genreLabel.text = searchResult.genre
         
         let formatter = NumberFormatter()
