@@ -49,9 +49,9 @@ class LandscapeViewController: UIViewController {
             case .notSearchedYet:
                 break
             case .loading:
-                break
+                showSpinner()
             case .noResults:
-                break
+                showNothingFoundLabel()
             case .results(let list):
                 tileButtons(list)
             }
@@ -59,7 +59,7 @@ class LandscapeViewController: UIViewController {
     }
     
     // MARK:- Actions
-    //
+    // Makes white dots on page control move with scrolling
     @IBAction func pageChanged(_ sender: UIPageControl) {
         UIView.animate(withDuration: 0.3, delay: 0, options: [.curveEaseInOut], animations: {
             self.scrollView.contentOffset = CGPoint(x: self.scrollView.bounds.size.width * CGFloat(sender.currentPage), y: 0)
@@ -118,8 +118,9 @@ class LandscapeViewController: UIViewController {
         for (index, result) in searchResults.enumerated() {
             let button = UIButton(type: .custom)
             downloadImage(for: result, andPlaceOn: button)
+            button.tag = 2000 + index
+            button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
             button.setBackgroundImage(UIImage(named: "LandscapeButton"), for: .normal)
-            //button.setTitle("\(index)", for: .normal)
             button.frame = CGRect(x: x + paddingHorz, y: marginY + CGFloat(row)*itemHeight + paddingVert, width: buttonWidth, height: buttonHeight)
             scrollView.addSubview(button)
             row += 1
@@ -162,6 +163,54 @@ class LandscapeViewController: UIViewController {
         }
     }
     
+    // Shows spinner in landscape with while loading
+    private func showSpinner() {
+        let spinner = UIActivityIndicatorView(style: .large)
+        spinner.center = CGPoint(x: scrollView.bounds.midX + 0.5, y: scrollView.bounds.midY + 0.5)
+        spinner.color = UIColor.white
+        spinner.tag = 1000
+        view.addSubview(spinner)
+        spinner.startAnimating()
+    }
+    
+    // Hides spinner
+    private func hideSpinner() {
+        view.viewWithTag(1000)?.removeFromSuperview()
+    }
+    
+    // Shows nothing found label in landscape mode
+    private func showNothingFoundLabel() {
+        let label = UILabel(frame: CGRect.zero)
+        label.text = "Nothing Found"
+        label.textColor = UIColor.white
+        label.backgroundColor = UIColor.clear
+        
+        label.sizeToFit()
+        
+        var rect = label.frame
+        rect.size.width = ceil(rect.size.width / 2) * 2
+        rect.size.height = ceil(rect.size.height / 2) * 2
+        label.frame = rect
+        
+        label.center = CGPoint(x: scrollView.bounds.midX, y: scrollView.bounds.midY)
+        view.addSubview(label)
+    }
+    
+    // MARK:- Public Methods
+    // Adds search results to tile buttons
+    func searchResultsReceived() {
+        hideSpinner()
+        
+        switch search.state {
+        case .notSearchedYet, .loading:
+            break
+        case .noResults:
+            showNothingFoundLabel()
+        case .results(let list):
+            tileButtons(list)
+        }
+    }
+    
     // MARK:- Helper Methods
     deinit {
         print("deinit \(self)")
@@ -169,10 +218,27 @@ class LandscapeViewController: UIViewController {
             task.cancel()
         }
     }
+    
+    @objc func buttonPressed(_ sender: UIButton) {
+        performSegue(withIdentifier: "Show Detail", sender: sender)
+    }
+    
+    // MARK:- Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Show Detail" {
+            if case .results(let list) = search.state {
+                let detailsViewController = segue.destination as! DetailViewController
+                let searchResult = list[(sender as! UIButton).tag - 2000]
+                detailsViewController.searchResult = searchResult
+            }
+        }
+    }
 }
 
 // MARK:- Extensions
 extension LandscapeViewController: UIScrollViewDelegate {
+    
+    // sets up scroll view with page control
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let width = scrollView.bounds.size.width
         let page = Int((scrollView.contentOffset.x + width / 2) / width)
