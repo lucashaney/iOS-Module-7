@@ -181,7 +181,7 @@ class LandscapeViewController: UIViewController {
     // Shows nothing found label in landscape mode
     private func showNothingFoundLabel() {
         let label = UILabel(frame: CGRect.zero)
-        label.text = "Nothing Found"
+        label.text = NSLocalizedString("Nothing Found", comment: "Landscape View: Nothing Found")
         label.textColor = UIColor.white
         label.backgroundColor = UIColor.clear
         
